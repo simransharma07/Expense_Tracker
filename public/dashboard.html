@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="sidebar">
+  <h3>Expense Tracker</h3>
+  <a href="#">Dashboard</a>
+  <a href="#">Expenses</a>
+</div>
+<div class="content">
+  <h2>Expenses</h2>
+  <form id="expenseForm">
+    <input id="title" placeholder="Title" required />
+    <input id="amount" type="number" placeholder="Amount" required />
+    <button>Add Expense</button>
+  </form>
+  <ul id="expenseList"></ul>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>
