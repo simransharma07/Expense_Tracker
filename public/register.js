@@ -20,7 +20,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   });
 
   if (res.ok) {
-    alert("Registered successfully");
+    const data = await res.json();
+    alert(data.message || "Registered successfully");
     window.location.href = "login.html";
   } else {
     alert(await res.text());

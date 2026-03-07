@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "1709856000000",
+    "title": "Groceries",
+    "amount": 2500,
+    "category": "Food",
+    "date": "2026-03-01T00:00:00.000Z"
+  },
+  {
+    "id": "1709942400000",
+    "title": "Electricity Bill",
+    "amount": 1200,
+    "category": "Utilities",
+    "date": "2026-03-02T00:00:00.000Z"
+  },
+  {
+    "id": "1710028800000",
+    "title": "Transportation",
+    "amount": 500,
+    "category": "Travel",
+    "date": "2026-03-03T00:00:00.000Z"
+  }
+]
