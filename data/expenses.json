@@ -9,15 +9,9 @@
   {
     "id": "1709942400000",
     "title": "Electricity Bill",
-    "amount": 1200,
+    "amount": 1450,
     "category": "Utilities",
-    "date": "2026-03-02T00:00:00.000Z"
-  },
-  {
-    "id": "1710028800000",
-    "title": "Transportation",
-    "amount": 500,
-    "category": "Travel",
-    "date": "2026-03-03T00:00:00.000Z"
+    "date": "2026-03-02T00:00:00.000Z",
+    "updatedAt": "2026-03-07T12:25:08.499Z"
   }
 ]

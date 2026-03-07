@@ -2,10 +2,25 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.join(__dirname, '../data/expenses.json');
 
+const normalizeAccount = (value) => {
+  const account = String(value || '').toLowerCase();
+  if (account === 'cash' || account === 'bank' || account === 'card') return account;
+  return 'cash';
+};
+
+const normalizeExpenses = (expenses) => {
+  if (!Array.isArray(expenses)) return [];
+  return expenses.map((expense) => ({
+    ...expense,
+    account: normalizeAccount(expense.account)
+  }));
+};
+
 // Synchronous file operations (original methods)
 exports.getExpenses = () => {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const expenses = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return normalizeExpenses(expenses);
   } catch (error) {
     console.error('Error reading expenses:', error);
     return [];
@@ -14,7 +29,7 @@ exports.getExpenses = () => {
 
 exports.saveExpenses = (expenses) => {
   try {
-    fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2), 'utf8');
+    fs.writeFileSync(filePath, JSON.stringify(normalizeExpenses(expenses), null, 2), 'utf8');
   } catch (error) {
     console.error('Error saving expenses:', error);
     throw error;
@@ -25,7 +40,7 @@ exports.saveExpenses = (expenses) => {
 exports.getExpensesAsync = async () => {
   try {
     const data = await fs.promises.readFile(filePath, 'utf8');
-    return JSON.parse(data);
+    return normalizeExpenses(JSON.parse(data));
   } catch (error) {
     console.error('Error reading expenses async:', error);
     return [];
@@ -36,7 +51,7 @@ exports.saveExpensesAsync = async (expenses) => {
   try {
     await fs.promises.writeFile(
       filePath, 
-      JSON.stringify(expenses, null, 2), 
+      JSON.stringify(normalizeExpenses(expenses), null, 2), 
       'utf8'
     );
     return true;

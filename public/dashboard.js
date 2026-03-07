@@ -15,6 +15,17 @@ const categoryFilter = document.getElementById('categoryFilter');
 const sortSelect = document.getElementById('sortSelect');
 const logoutBtn = document.getElementById('logoutBtn');
 const welcomeText = document.getElementById('welcomeText');
+const openFilterBtn = document.getElementById('openFilterBtn');
+const closeFilterBtn = document.getElementById('closeFilterBtn');
+const filterDrawer = document.getElementById('filterDrawer');
+const filterOverlay = document.getElementById('filterOverlay');
+const accountAll = document.getElementById('accountAll');
+const accountCheckboxes = Array.from(document.querySelectorAll('.account-checkbox'));
+const incomePercent = document.getElementById('incomePercent');
+const expensePercent = document.getElementById('expensePercent');
+const incomeAmount = document.getElementById('incomeAmount');
+const expenseAmount = document.getElementById('expenseAmount');
+const filterTotalAmount = document.getElementById('filterTotalAmount');
 
 const totalAmount = document.getElementById('totalAmount');
 const monthlyAmount = document.getElementById('monthlyAmount');
@@ -23,6 +34,7 @@ const expenseCount = document.getElementById('expenseCount');
 
 let expenses = [];
 let editingExpenseId = null;
+let selectedAccounts = [];
 
 const formatCurrency = (value) => `₹${Number(value || 0).toFixed(2)}`;
 
@@ -31,6 +43,77 @@ const formatDate = (rawDate) => {
   const parsed = new Date(rawDate);
   if (Number.isNaN(parsed.getTime())) return '-';
   return parsed.toLocaleDateString();
+};
+
+const normalizeAccount = (value) => {
+  const account = String(value || '').toLowerCase();
+  if (account === 'cash' || account === 'bank' || account === 'card') return account;
+  return 'cash';
+};
+
+const updateFilterSummary = () => {
+  const totals = expenses.reduce((acc, expense) => {
+    const amount = Number(expense.amount || 0);
+    if (amount < 0) {
+      acc.income += Math.abs(amount);
+    } else {
+      acc.expense += amount;
+    }
+    return acc;
+  }, { income: 0, expense: 0 });
+
+  const total = totals.income + totals.expense;
+  const incomePct = total > 0 ? (totals.income / total) * 100 : 0;
+  const expensePct = total > 0 ? (totals.expense / total) * 100 : 0;
+
+  incomePercent.textContent = `${Math.round(incomePct)}%`;
+  expensePercent.textContent = `${Math.round(expensePct)}%`;
+  incomeAmount.textContent = formatCurrency(totals.income);
+  expenseAmount.textContent = formatCurrency(totals.expense);
+  filterTotalAmount.textContent = formatCurrency(total);
+};
+
+const openFilterDrawer = () => {
+  filterDrawer.classList.add('open');
+  filterOverlay.classList.add('open');
+  filterDrawer.setAttribute('aria-hidden', 'false');
+};
+
+const closeFilterDrawer = () => {
+  filterDrawer.classList.remove('open');
+  filterOverlay.classList.remove('open');
+  filterDrawer.setAttribute('aria-hidden', 'true');
+};
+
+const getSelectedAccounts = () => {
+  const values = accountCheckboxes
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => normalizeAccount(checkbox.value));
+  return [...new Set(values)];
+};
+
+const syncAccountCheckboxes = () => {
+  if (selectedAccounts.length === 0) {
+    accountAll.checked = true;
+    accountCheckboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    return;
+  }
+
+  accountAll.checked = false;
+  accountCheckboxes.forEach((checkbox) => {
+    checkbox.checked = selectedAccounts.includes(normalizeAccount(checkbox.value));
+  });
+};
+
+const buildExpenseUrl = () => {
+  const query = new URLSearchParams();
+  if (selectedAccounts.length > 0) {
+    query.set('account', selectedAccounts.join(','));
+  }
+  const suffix = query.toString() ? `?${query.toString()}` : '';
+  return `/api/expenses${suffix}`;
 };
 
 const getFilteredExpenses = () => {
@@ -146,7 +229,7 @@ const renderTable = () => {
 };
 
 const loadExpenses = async()=>{
-  const res = await fetch('/expenses',{ headers:{ userid:userId }});
+  const res = await fetch(buildExpenseUrl(),{ headers:{ userid:userId }});
   if (!res.ok) {
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
@@ -155,8 +238,12 @@ const loadExpenses = async()=>{
   }
 
   const payload = await res.json();
-  expenses = Array.isArray(payload) ? payload : (payload.data || []);
+  expenses = (Array.isArray(payload) ? payload : (payload.data || [])).map((expense) => ({
+    ...expense,
+    account: normalizeAccount(expense.account)
+  }));
   updateStats();
+  updateFilterSummary();
   populateCategoryFilter();
   renderTable();
 };
@@ -239,6 +326,34 @@ expenseTableBody.addEventListener('click', async (event) => {
   element.addEventListener('change', renderTable);
 });
 
+openFilterBtn.addEventListener('click', openFilterDrawer);
+closeFilterBtn.addEventListener('click', closeFilterDrawer);
+filterOverlay.addEventListener('click', closeFilterDrawer);
+
+accountAll.addEventListener('change', async () => {
+  if (!accountAll.checked) {
+    if (selectedAccounts.length === 0) {
+      accountAll.checked = true;
+    }
+    return;
+  }
+
+  selectedAccounts = [];
+  syncAccountCheckboxes();
+  await loadExpenses();
+});
+
+accountCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener('change', async () => {
+    selectedAccounts = getSelectedAccounts();
+    if (selectedAccounts.length === 0) {
+      selectedAccounts = [];
+    }
+    syncAccountCheckboxes();
+    await loadExpenses();
+  });
+});
+
 logoutBtn.addEventListener('click', () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
@@ -250,4 +365,5 @@ if (userEmail) {
   welcomeText.textContent = `Welcome, ${userEmail}`;
 }
 
+syncAccountCheckboxes();
 loadExpenses();

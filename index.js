@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
 // ROUTER-LEVEL MIDDLEWARE - Mount routers
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/expenses', require('./routes/expenseRoutes'));
+app.use('/api/expenses', require('./routes/expenseRoutes'));
 app.use('/files', require('./routes/fileRoutes'));  // New file operations route
 
 // ========== DIFFERENT RESPONSE METHODS (from syllabus) ==========
