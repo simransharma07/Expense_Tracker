@@ -69,3 +69,10 @@
 [2026-03-07T11:44:33.206Z] GET /style.css - IP: ::1
 [2026-03-07T11:44:33.209Z] GET /dashboard.js - IP: ::1
 [2026-03-07T11:44:33.224Z] GET /expenses - IP: ::1
+[2026-03-07T11:48:33.189Z] GET /login.html - IP: ::1
+[2026-03-07T11:48:33.207Z] GET /style.css - IP: ::1
+[2026-03-07T11:48:33.214Z] GET /login-illustration.svg - IP: ::1
+[2026-03-07T11:48:33.217Z] GET /login.js - IP: ::1
+[2026-03-07T11:50:33.286Z] GET /login.html - IP: ::1
+[2026-03-07T11:50:33.309Z] GET /style.css - IP: ::1
+[2026-03-07T11:50:33.313Z] GET /login.js - IP: ::1
