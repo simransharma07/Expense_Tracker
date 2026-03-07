@@ -4,7 +4,8 @@
     "title": "Groceries",
     "amount": 2500,
     "category": "Food",
-    "date": "2026-03-01T00:00:00.000Z"
+    "date": "2026-03-01T00:00:00.000Z",
+    "account": "cash"
   },
   {
     "id": "1709942400000",
@@ -12,6 +13,31 @@
     "amount": 1450,
     "category": "Utilities",
     "date": "2026-03-02T00:00:00.000Z",
-    "updatedAt": "2026-03-07T12:25:08.499Z"
+    "updatedAt": "2026-03-07T12:25:08.499Z",
+    "account": "bank"
+  },
+  {
+    "id": "1772888551540",
+    "title": "shopping",
+    "amount": 200,
+    "category": "clothes",
+    "date": "2026-02-02T00:00:00.000Z",
+    "account": "cash"
+  },
+  {
+    "id": "1772888885099",
+    "title": "shopping",
+    "amount": 1200,
+    "category": "clothing",
+    "account": "bank",
+    "date": "2026-04-02T00:00:00.000Z"
+  },
+  {
+    "id": "1772889006629",
+    "title": "electricity",
+    "amount": 100,
+    "category": "home",
+    "account": "card",
+    "date": "2026-02-12T00:00:00.000Z"
   }
 ]

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/authMiddleware');
+const validateExpense = require('../middleware/validateExpense');
 const { getExpenses } = require('../models/expenseModel');
 const { 
   addExpense, 
@@ -13,15 +14,19 @@ const {
 router.get('/', auth, (req, res) => {
   const { sort, limit, account } = req.query;
   const normalizeAccount = (value) => {
-    const accountValue = String(value || '').toLowerCase();
-    if (accountValue === 'cash' || accountValue === 'bank' || accountValue === 'card') return accountValue;
-    return 'cash';
+    const accountValue = String(value || '').trim().toLowerCase();
+    if (accountValue === 'cash') return 'cash';
+    if (accountValue === 'bank') return 'bank';
+    if (accountValue === 'card') return 'card';
+    return '';
   };
 
-  const requestedAccounts = String(account || '')
-    .split(',')
-    .map((item) => normalizeAccount(item.trim()))
-    .filter((value, index, values) => value && values.indexOf(value) === index);
+  const requestedAccounts = account
+    ? String(account)
+        .split(',')
+        .map((item) => normalizeAccount(item.trim()))
+        .filter((value, index, values) => value && values.indexOf(value) === index)
+    : [];
 
   let result = getExpenses().map((expense) => ({
     ...expense,
@@ -51,9 +56,9 @@ router.get('/', auth, (req, res) => {
     data: result
   });
 });           // GET all expenses (supports query params: ?sort=asc&limit=5&account=cash)
-router.post('/', auth, addExpense);             // POST create new expense
+router.post('/', auth, validateExpense, addExpense);             // POST create new expense
 router.get('/:id', auth, fetchExpenseById);     // GET single expense (Route Parameters)
-router.put('/:id', auth, updateExpense);        // PUT update expense (Route Parameters)
+router.put('/:id', auth, validateExpense, updateExpense);        // PUT update expense (Route Parameters)
 router.delete('/:id', auth, deleteExpense);     // DELETE expense (Route Parameters)
 
 module.exports = router;

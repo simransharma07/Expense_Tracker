@@ -8,10 +8,11 @@
 <div class="dashboard-shell">
   <header class="dashboard-header">
     <div>
-      <h1>Expense Dashboard</h1>
+      <h1>SpendWise</h1>
       <p id="welcomeText">Track and manage your daily expenses</p>
     </div>
     <div class="header-actions">
+      <button id="openStatsBtn" class="filter-btn" type="button">Stats</button>
       <button id="openFilterBtn" class="filter-btn" type="button">Filter</button>
       <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
     </div>
@@ -19,19 +20,19 @@
 
   <section class="stats-grid">
     <article class="stat-card">
-      <p>Total Spend</p>
+      <p class="stat-title"><span>💰</span> Total Spend</p>
       <h3 id="totalAmount">₹0</h3>
     </article>
     <article class="stat-card">
-      <p>This Month</p>
+      <p class="stat-title"><span>📅</span> This Month</p>
       <h3 id="monthlyAmount">₹0</h3>
     </article>
     <article class="stat-card">
-      <p>Highest Expense</p>
+      <p class="stat-title"><span>📈</span> Highest Expense</p>
       <h3 id="highestAmount">₹0</h3>
     </article>
     <article class="stat-card">
-      <p>Total Entries</p>
+      <p class="stat-title"><span>📊</span> Total Entries</p>
       <h3 id="expenseCount">0</h3>
     </article>
   </section>
@@ -42,7 +43,14 @@
       <input id="title" placeholder="Title" required />
       <input id="amount" type="number" min="0" step="0.01" placeholder="Amount" required />
       <input id="category" placeholder="Category (e.g. Food, Travel)" />
-      <input id="date" type="date" />
+      <select id="account" required>
+        <option value="cash">Cash</option>
+        <option value="bank">Bank</option>
+        <option value="card">Card</option>
+      </select>
+      <div class="date-picker-wrap">
+        <input id="date" type="date" />
+      </div>
       <button id="submitBtn" type="submit">Add Expense</button>
       <button id="cancelEditBtn" type="button" class="secondary-btn" style="display: none;">Cancel Edit</button>
     </form>
@@ -108,27 +116,113 @@
     </article>
   </section>
 
-  <section class="account-section">
-    <h4>Account</h4>
+  <div class="filter-sections-grid">
+    <section class="category-section">
+      <h4>Category</h4>
+      <div class="category-options-grid">
+        <label class="category-option">
+          <input type="checkbox" value="food" />
+          <span>Food</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="shopping" />
+          <span>Shopping</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="utilities" />
+          <span>Utilities</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="social-life" />
+          <span>Social Life</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="beauty" />
+          <span>Beauty</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="culture" />
+          <span>Culture</span>
+        </label>
+        <label class="category-option">
+          <input type="checkbox" value="other" />
+          <span>Other</span>
+        </label>
+      </div>
+    </section>
 
-    <label class="account-option">
-      <input type="checkbox" id="accountAll" value="all" checked />
-      <span>All</span>
-    </label>
-    <label class="account-option">
-      <input type="checkbox" class="account-checkbox" value="cash" />
-      <span>Cash</span>
-    </label>
-    <label class="account-option">
-      <input type="checkbox" class="account-checkbox" value="bank" />
-      <span>Bank Accounts</span>
-    </label>
-    <label class="account-option">
-      <input type="checkbox" class="account-checkbox" value="card" />
-      <span>Card</span>
-    </label>
-  </section>
+    <section class="account-section">
+      <h4>Account</h4>
+
+      <label class="account-option">
+        <input type="checkbox" id="accountAll" value="all" checked />
+        <span>All</span>
+      </label>
+      <label class="account-option">
+        <input type="checkbox" class="account-checkbox" value="cash" />
+        <span>Cash</span>
+      </label>
+      <label class="account-option">
+        <input type="checkbox" class="account-checkbox" value="bank" />
+        <span>Bank Accounts</span>
+      </label>
+      <label class="account-option">
+        <input type="checkbox" class="account-checkbox" value="card" />
+        <span>Card</span>
+      </label>
+    </section>
+  </div>
 </aside>
+
+<div id="calendarOverlay" class="calendar-overlay"></div>
+<div id="calendarModal" class="calendar-modal" aria-hidden="true">
+  <div class="calendar-head">
+    <button id="prevMonthBtn" type="button" class="calendar-nav-btn">‹</button>
+    <h3 id="calendarMonthLabel">Month Year</h3>
+    <button id="nextMonthBtn" type="button" class="calendar-nav-btn">›</button>
+  </div>
+
+  <div class="calendar-weekdays">
+    <span>Sun</span>
+    <span>Mon</span>
+    <span>Tue</span>
+    <span>Wed</span>
+    <span>Thu</span>
+    <span>Fri</span>
+    <span>Sat</span>
+  </div>
+
+  <div id="calendarGrid" class="calendar-grid"></div>
+</div>
+
+  <div id="statsOverlay" class="stats-overlay"></div>
+  <div id="statsModal" class="stats-modal" aria-hidden="true">
+    <div class="stats-modal-head">
+      <h3>Spending Summary</h3>
+      <button id="closeStatsBtn" type="button" class="drawer-close-btn" aria-label="Close statistics">✕</button>
+    </div>
+
+    <div class="stats-modal-grid">
+      <article class="stats-modal-card">
+        <p>Daily Total</p>
+        <strong id="dailyTotal">₹0.00</strong>
+      </article>
+      <article class="stats-modal-card">
+        <p>Weekly Total</p>
+        <strong id="weeklyTotal">₹0.00</strong>
+      </article>
+      <article class="stats-modal-card">
+        <p>Monthly Total</p>
+        <strong id="statsMonthlyTotal">₹0.00</strong>
+      </article>
+      <article class="stats-modal-card">
+        <p>Yearly Total</p>
+        <strong id="yearlyTotal">₹0.00</strong>
+      </article>
+    </div>
+
+    <p id="weeklyTrendText" class="weekly-trend">No spending data yet.</p>
+  </div>
 
 <script src="dashboard.js"></script>
 </body>
