@@ -5,6 +5,7 @@ const expenseForm = document.getElementById('expenseForm');
 const titleInput = document.getElementById('title');
 const amountInput = document.getElementById('amount');
 const categoryInput = document.getElementById('category');
+const accountInput = document.getElementById('account');
 const dateInput = document.getElementById('date');
 const submitBtn = document.getElementById('submitBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
@@ -15,10 +16,26 @@ const categoryFilter = document.getElementById('categoryFilter');
 const sortSelect = document.getElementById('sortSelect');
 const logoutBtn = document.getElementById('logoutBtn');
 const welcomeText = document.getElementById('welcomeText');
+const openStatsBtn = document.getElementById('openStatsBtn');
 const openFilterBtn = document.getElementById('openFilterBtn');
+const openCalendarBtn = document.getElementById('openCalendarBtn');
 const closeFilterBtn = document.getElementById('closeFilterBtn');
 const filterDrawer = document.getElementById('filterDrawer');
 const filterOverlay = document.getElementById('filterOverlay');
+const statsOverlay = document.getElementById('statsOverlay');
+const statsModal = document.getElementById('statsModal');
+const closeStatsBtn = document.getElementById('closeStatsBtn');
+const dailyTotal = document.getElementById('dailyTotal');
+const weeklyTotal = document.getElementById('weeklyTotal');
+const statsMonthlyTotal = document.getElementById('statsMonthlyTotal');
+const yearlyTotal = document.getElementById('yearlyTotal');
+const weeklyTrendText = document.getElementById('weeklyTrendText');
+const calendarOverlay = document.getElementById('calendarOverlay');
+const calendarModal = document.getElementById('calendarModal');
+const prevMonthBtn = document.getElementById('prevMonthBtn');
+const nextMonthBtn = document.getElementById('nextMonthBtn');
+const calendarMonthLabel = document.getElementById('calendarMonthLabel');
+const calendarGrid = document.getElementById('calendarGrid');
 const accountAll = document.getElementById('accountAll');
 const accountCheckboxes = Array.from(document.querySelectorAll('.account-checkbox'));
 const incomePercent = document.getElementById('incomePercent');
@@ -35,6 +52,7 @@ const expenseCount = document.getElementById('expenseCount');
 let expenses = [];
 let editingExpenseId = null;
 let selectedAccounts = [];
+let calendarViewDate = new Date();
 
 const formatCurrency = (value) => `₹${Number(value || 0).toFixed(2)}`;
 
@@ -49,6 +67,23 @@ const normalizeAccount = (value) => {
   const account = String(value || '').toLowerCase();
   if (account === 'cash' || account === 'bank' || account === 'card') return account;
   return 'cash';
+};
+
+const getCategoryBadgeClass = (category) => {
+  const normalized = String(category || '').trim().toLowerCase();
+  if (normalized === 'food') return 'category-badge category-food';
+  if (normalized === 'travel') return 'category-badge category-travel';
+  if (normalized === 'shopping' || normalized === 'clothes' || normalized === 'clothing') {
+    return 'category-badge category-shopping';
+  }
+  return 'category-badge category-other';
+};
+
+const getAccountDisplay = (account) => {
+  const normalized = normalizeAccount(account);
+  if (normalized === 'cash') return '💵 Cash';
+  if (normalized === 'bank') return '🏦 Bank';
+  return '💳 Card';
 };
 
 const updateFilterSummary = () => {
@@ -83,6 +118,115 @@ const closeFilterDrawer = () => {
   filterDrawer.classList.remove('open');
   filterOverlay.classList.remove('open');
   filterDrawer.setAttribute('aria-hidden', 'true');
+};
+
+const openStatsModal = () => {
+  updateStatisticsPanel();
+  statsOverlay.classList.add('open');
+  statsModal.classList.add('open');
+  statsModal.setAttribute('aria-hidden', 'false');
+};
+
+const closeStatsModal = () => {
+  statsOverlay.classList.remove('open');
+  statsModal.classList.remove('open');
+  statsModal.setAttribute('aria-hidden', 'true');
+};
+
+const toInputDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const openCalendarModal = () => {
+  const parsed = dateInput.value ? new Date(dateInput.value) : new Date();
+  calendarViewDate = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+  renderCalendar();
+  calendarOverlay.classList.add('open');
+  calendarModal.classList.add('open');
+  calendarModal.setAttribute('aria-hidden', 'false');
+};
+
+const closeCalendarModal = () => {
+  calendarOverlay.classList.remove('open');
+  calendarModal.classList.remove('open');
+  calendarModal.setAttribute('aria-hidden', 'true');
+};
+
+const getExpenseDateSet = () => {
+  const dates = new Set();
+  expenses.forEach((expense) => {
+    const parsed = new Date(expense.date || '');
+    if (!Number.isNaN(parsed.getTime())) {
+      dates.add(toInputDate(parsed));
+    }
+  });
+  return dates;
+};
+
+const renderCalendar = () => {
+  const year = calendarViewDate.getFullYear();
+  const month = calendarViewDate.getMonth();
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+  const selectedDate = dateInput.value || '';
+  const expenseDateSet = getExpenseDateSet();
+
+  calendarMonthLabel.textContent = calendarViewDate.toLocaleDateString(undefined, {
+    month: 'long',
+    year: 'numeric'
+  });
+
+  calendarGrid.innerHTML = '';
+
+  const totalCells = 42;
+  for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
+    let dayNumber;
+    let cellDate;
+    let isOutsideMonth = false;
+
+    if (cellIndex < firstDayIndex) {
+      dayNumber = prevMonthDays - firstDayIndex + cellIndex + 1;
+      cellDate = new Date(year, month - 1, dayNumber);
+      isOutsideMonth = true;
+    } else if (cellIndex >= firstDayIndex + daysInMonth) {
+      dayNumber = cellIndex - (firstDayIndex + daysInMonth) + 1;
+      cellDate = new Date(year, month + 1, dayNumber);
+      isOutsideMonth = true;
+    } else {
+      dayNumber = cellIndex - firstDayIndex + 1;
+      cellDate = new Date(year, month, dayNumber);
+    }
+
+    const cellDateValue = toInputDate(cellDate);
+    const dayButton = document.createElement('button');
+    dayButton.type = 'button';
+    dayButton.className = 'calendar-day';
+    dayButton.textContent = String(dayNumber);
+    dayButton.dataset.date = cellDateValue;
+
+    if (isOutsideMonth) {
+      dayButton.classList.add('outside');
+    }
+
+    if (expenseDateSet.has(cellDateValue)) {
+      dayButton.classList.add('has-expense');
+    }
+
+    if (selectedDate && selectedDate === cellDateValue) {
+      dayButton.classList.add('selected');
+    }
+
+    dayButton.addEventListener('click', () => {
+      dateInput.value = cellDateValue;
+      closeCalendarModal();
+    });
+
+    calendarGrid.appendChild(dayButton);
+  }
 };
 
 const getSelectedAccounts = () => {
@@ -148,6 +292,81 @@ const getFilteredExpenses = () => {
   return result;
 };
 
+const updateStatisticsPanel = () => {
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrowStart = new Date(todayStart);
+  tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+  const currentWeekStart = new Date(todayStart);
+  currentWeekStart.setDate(currentWeekStart.getDate() - 6);
+  const previousWeekStart = new Date(currentWeekStart);
+  previousWeekStart.setDate(previousWeekStart.getDate() - 7);
+  const previousWeekEnd = new Date(currentWeekStart);
+
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const totals = expenses.reduce((acc, expense) => {
+    const amount = Number(expense.amount || 0);
+    const parsedDate = new Date(expense.date || '');
+    if (Number.isNaN(parsedDate.getTime())) return acc;
+
+    if (parsedDate >= todayStart && parsedDate < tomorrowStart) {
+      acc.daily += amount;
+    }
+
+    if (parsedDate >= currentWeekStart && parsedDate < tomorrowStart) {
+      acc.weekly += amount;
+    }
+
+    if (parsedDate >= previousWeekStart && parsedDate < previousWeekEnd) {
+      acc.previousWeekly += amount;
+    }
+
+    if (parsedDate.getMonth() === currentMonth && parsedDate.getFullYear() === currentYear) {
+      acc.monthly += amount;
+    }
+
+    if (parsedDate.getFullYear() === currentYear) {
+      acc.yearly += amount;
+    }
+
+    return acc;
+  }, {
+    daily: 0,
+    weekly: 0,
+    previousWeekly: 0,
+    monthly: 0,
+    yearly: 0
+  });
+
+  dailyTotal.textContent = formatCurrency(totals.daily);
+  weeklyTotal.textContent = formatCurrency(totals.weekly);
+  statsMonthlyTotal.textContent = formatCurrency(totals.monthly);
+  yearlyTotal.textContent = formatCurrency(totals.yearly);
+
+  const currentWeekly = totals.weekly;
+  const previousWeekly = totals.previousWeekly;
+  if (previousWeekly <= 0) {
+    weeklyTrendText.textContent = currentWeekly > 0
+      ? 'No spending in last week to compare.'
+      : 'No weekly spending data yet.';
+    return;
+  }
+
+  const diff = currentWeekly - previousWeekly;
+  const percentage = Math.round(Math.abs((diff / previousWeekly) * 100));
+
+  if (diff > 0) {
+    weeklyTrendText.textContent = `You spent ${percentage}% more than last week.`;
+  } else if (diff < 0) {
+    weeklyTrendText.textContent = `You spent ${percentage}% less than last week.`;
+  } else {
+    weeklyTrendText.textContent = 'You spent the same as last week.';
+  }
+};
+
 const updateStats = () => {
   const now = new Date();
   const currentMonth = now.getMonth();
@@ -197,6 +416,7 @@ const startEdit = (expense) => {
   titleInput.value = expense.title || '';
   amountInput.value = expense.amount || '';
   categoryInput.value = expense.category || '';
+  accountInput.value = normalizeAccount(expense.account);
   dateInput.value = expense.date ? new Date(expense.date).toISOString().split('T')[0] : '';
   submitBtn.textContent = 'Update Expense';
   cancelEditBtn.style.display = 'inline-block';
@@ -213,10 +433,13 @@ const renderTable = () => {
   }
 
   visibleExpenses.forEach((expense) => {
+    const categoryText = expense.category || 'General';
+    const categoryClass = getCategoryBadgeClass(categoryText);
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${expense.title || '-'}</td>
-      <td>${expense.category || 'General'}</td>
+      <td><span class="${categoryClass}">${categoryText}</span></td>
       <td>${formatCurrency(expense.amount)}</td>
       <td>${formatDate(expense.date)}</td>
       <td>
@@ -243,7 +466,9 @@ const loadExpenses = async()=>{
     account: normalizeAccount(expense.account)
   }));
   updateStats();
+  updateStatisticsPanel();
   updateFilterSummary();
+  renderCalendar();
   populateCategoryFilter();
   renderTable();
 };
@@ -255,6 +480,7 @@ expenseForm.addEventListener('submit', async e=>{
     title: titleInput.value.trim(),
     amount: amountInput.value,
     category: categoryInput.value.trim() || 'General',
+    account: accountInput.value || 'cash',
     date: dateInput.value ? new Date(dateInput.value).toISOString() : new Date().toISOString()
   };
 
@@ -326,9 +552,24 @@ expenseTableBody.addEventListener('click', async (event) => {
   element.addEventListener('change', renderTable);
 });
 
+openStatsBtn.addEventListener('click', openStatsModal);
 openFilterBtn.addEventListener('click', openFilterDrawer);
+if (openCalendarBtn) {
+  openCalendarBtn.addEventListener('click', openCalendarModal);
+}
+closeStatsBtn.addEventListener('click', closeStatsModal);
 closeFilterBtn.addEventListener('click', closeFilterDrawer);
 filterOverlay.addEventListener('click', closeFilterDrawer);
+statsOverlay.addEventListener('click', closeStatsModal);
+calendarOverlay.addEventListener('click', closeCalendarModal);
+prevMonthBtn.addEventListener('click', () => {
+  calendarViewDate = new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth() - 1, 1);
+  renderCalendar();
+});
+nextMonthBtn.addEventListener('click', () => {
+  calendarViewDate = new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth() + 1, 1);
+  renderCalendar();
+});
 
 accountAll.addEventListener('change', async () => {
   if (!accountAll.checked) {
@@ -345,10 +586,19 @@ accountAll.addEventListener('change', async () => {
 
 accountCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', async () => {
+    // If clicking an individual checkbox while All is checked, uncheck All first
+    if (accountAll.checked && checkbox.checked) {
+      accountAll.checked = false;
+    }
+    
     selectedAccounts = getSelectedAccounts();
+    
+    // If no individual checkboxes are selected, automatically select All
     if (selectedAccounts.length === 0) {
       selectedAccounts = [];
+      accountAll.checked = true;
     }
+    
     syncAccountCheckboxes();
     await loadExpenses();
   });

@@ -50,7 +50,7 @@ exports.fetchExpenseById = (req, res) => {
 // POST - Add new expense
 exports.addExpense = (req, res) => {
   const expenses = getExpenses();
-  const { title, amount, category, date } = req.body;
+  const { title, amount, category, date, account } = req.body;
 
   // Request validation
   if (!title || !amount) {
@@ -65,6 +65,7 @@ exports.addExpense = (req, res) => {
     title, 
     amount: parseFloat(amount),
     category: category || 'General',
+    account: account || 'cash',
     date: date || new Date().toISOString()
   };
   
@@ -83,7 +84,7 @@ exports.addExpense = (req, res) => {
 exports.updateExpense = (req, res) => {
   const expenses = getExpenses();
   const { id } = req.params; // Route parameter from URL
-  const { title, amount, category } = req.body;
+  const { title, amount, category, account } = req.body;
   
   const expenseIndex = expenses.findIndex(exp => exp.id === id);
   
@@ -100,6 +101,7 @@ exports.updateExpense = (req, res) => {
     title: title || expenses[expenseIndex].title,
     amount: amount ? parseFloat(amount) : expenses[expenseIndex].amount,
     category: category || expenses[expenseIndex].category,
+    account: account || expenses[expenseIndex].account,
     updatedAt: new Date().toISOString()
   };
   
