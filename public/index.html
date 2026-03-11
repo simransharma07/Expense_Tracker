@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise - Take Control of Your Expenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="landing.css">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="landing-nav">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <span class="nav-logo"><i class="fa-solid fa-wallet"></i></span>
+        <span class="nav-name">spend<span class="nav-name-bold">wise</span></span>
+      </div>
+      <div class="nav-actions">
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <a href="login.html" class="nav-cta">Get Started <span>&rarr;</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1>Take control of your <span class="highlight">expenses</span> today.</h1>
+        <p class="hero-subtitle">
+          Track your spending, unleash your saving!<br>
+          Transform expenses into financial freedom!
+        </p>
+        <p class="hero-description">
+          Spendwise empowers you to make informed financial decisions. Our
+          intuitive tools help you visualize your spending patterns, set realistic
+          budgets, and achieve your financial goals with ease.
+        </p>
+        <a href="register.html" class="hero-cta">Start Your Journey <span>&rarr;</span></a>
+      </div>
+      <div class="hero-illustration">
+        <div class="illustration-card">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <div class="chart-bar-group">
+                <div class="chart-bar" style="height: 40%;"></div>
+                <div class="chart-bar" style="height: 65%;"></div>
+                <div class="chart-bar accent" style="height: 85%;"></div>
+                <div class="chart-bar" style="height: 50%;"></div>
+                <div class="chart-bar" style="height: 70%;"></div>
+              </div>
+              <div class="pie-chart">
+                <div class="pie-segment"></div>
+              </div>
+              <div class="list-lines">
+                <div class="line"></div>
+                <div class="line short"></div>
+                <div class="line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="floating-coin coin-1"><i class="fa-solid fa-coins"></i></div>
+          <div class="floating-coin coin-2"><i class="fa-solid fa-sterling-sign"></i></div>
+          <div class="person person-left">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="person person-right">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="plant"><i class="fa-solid fa-seedling"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Spendwise Section -->
+  <section class="why-section">
+    <h2>Why Spendwise?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <h3>Visual Analytics</h3>
+        <p>Beautiful charts and graphs to understand your spending patterns at a glance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+        <h3>Budget Goals</h3>
+        <p>Set realistic budgets and track your progress toward financial milestones.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>Secure & Private</h3>
+        <p>Your financial data is protected with industry-standard security measures.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+        <h3>Real-Time Tracking</h3>
+        <p>Instantly log expenses and see your balance update in real time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <p>&copy; 2026 Spendwise. All rights reserved.</p>
+  </footer>
+
+  <script src="darkmode.js"></script>
+</body>
+
+</html>

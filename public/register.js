@@ -1,3 +1,18 @@
+const registerPasswordInput = document.getElementById("password");
+const toggleRegisterPasswordButton = document.getElementById("toggleRegisterPassword");
+
+toggleRegisterPasswordButton.addEventListener("click", () => {
+  const shouldShowPassword = registerPasswordInput.type === "password";
+  registerPasswordInput.type = shouldShowPassword ? "text" : "password";
+  toggleRegisterPasswordButton.innerHTML = shouldShowPassword
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+    : '<i class="fa-regular fa-eye"></i>';
+  toggleRegisterPasswordButton.setAttribute(
+    "aria-label",
+    shouldShowPassword ? "Hide password" : "Show password"
+  );
+});
+
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 

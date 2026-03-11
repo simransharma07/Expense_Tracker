@@ -29,31 +29,17 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 });
 
-const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+const passwordInput = document.getElementById("password");
+const togglePasswordButton = document.getElementById("togglePassword");
 
-forgotPasswordLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  forgotPasswordForm.style.display = forgotPasswordForm.style.display === "none" ? "block" : "none";
-});
-
-forgotPasswordForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("forgotEmail").value.toLowerCase();
-  const newPassword = document.getElementById("forgotNewPassword").value;
-
-  const res = await fetch("/auth/forgot-password", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, newPassword })
-  });
-
-  if (res.ok) {
-    alert("Password reset successful. Please login with your new password.");
-    forgotPasswordForm.reset();
-    forgotPasswordForm.style.display = "none";
-  } else {
-    alert(await res.text());
-  }
+togglePasswordButton.addEventListener("click", () => {
+  const shouldShowPassword = passwordInput.type === "password";
+  passwordInput.type = shouldShowPassword ? "text" : "password";
+  togglePasswordButton.innerHTML = shouldShowPassword
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+    : '<i class="fa-regular fa-eye"></i>';
+  togglePasswordButton.setAttribute(
+    "aria-label",
+    shouldShowPassword ? "Hide password" : "Show password"
+  );
 });

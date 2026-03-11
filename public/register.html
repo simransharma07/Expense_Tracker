@@ -1,29 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Expense Tracker - Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise - Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="darkmode-auth.css">
 </head>
-<body>
 
-<div class="container">
-  <h2>Create Your Account</h2>
+<body class="register-page">
+  <main class="auth-layout auth-layout-reverse">
+    <section class="auth-main-panel">
+      <div class="brand-mark">
+        <span class="brand-icon"><i class="fa-solid fa-wallet"></i></span>
+        <span class="brand-name">SpendWise</span>
+        <button class="dark-mode-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
 
-  <form id="registerForm">
-    <label>Email</label>
-    <input type="email" id="email" placeholder="Enter your email" required>
+      <div class="auth-copy">
+        <h1>Create Account</h1>
+      </div>
 
-    <label>Password</label>
-    <input type="password" id="password" placeholder="Create a strong password" required>
+      <form id="registerForm" class="auth-form-card">
+        <div class="input-shell">
+          <input type="email" id="email" placeholder="Email" required>
+        </div>
 
-    <button type="submit">Register</button>
-  </form>
+        <div class="input-shell password-shell">
+          <input type="password" id="password" placeholder="Password" required>
+          <button type="button" id="toggleRegisterPassword" class="password-toggle" aria-label="Show password">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
 
-  <p class="links">
-    Already have an account? <a href="login.html">Login</a>
-  </p>
-</div>
+        <button type="submit" class="auth-submit-btn">Sign Up</button>
+      </form>
+    </section>
 
-<script src="register.js"></script>
+    <aside class="auth-side-panel">
+      <button type="button" class="panel-close" aria-label="Close panel">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="panel-content">
+        <h2>Already Have an Account?</h2>
+        <p>Sign in to continue tracking your expenses and stay in control of your spending.</p>
+        <a href="login.html" class="panel-signup-btn">Sign In</a>
+      </div>
+    </aside>
+  </main>
+
+  <script src="darkmode.js"></script>
+  <script src="register.js"></script>
 </body>
+
 </html>

@@ -1,41 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpendWise - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="darkmode-auth.css">
 </head>
-<body>
 
-<div class="container">
-  <h2>SpendWise - Login</h2>
+<body class="login-page">
+  <main class="auth-layout">
+    <section class="auth-main-panel">
+      <div class="brand-mark">
+        <span class="brand-icon"><i class="fa-solid fa-wallet"></i></span>
+        <span class="brand-name">SpendWise</span>
+        <button class="dark-mode-toggle" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
 
-  <form id="loginForm">
-    <label>Email</label>
-    
-    <input type="email" id="email" placeholder="Enter your email" required>
+      <div class="auth-copy">
+        <h1>Login to Your Account</h1>
+      </div>
 
-    <label>Password</label>
-    <input type="password" id="password" placeholder="Enter password" required>
+      <form id="loginForm" class="auth-form-card">
+        <div class="input-shell">
+          <input type="email" id="email" placeholder="Email" required>
+        </div>
 
-    <button type="submit">Sign In</button>
-  </form>
+        <div class="input-shell password-shell">
+          <input type="password" id="password" placeholder="Password" required>
+          <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
 
-  <p class="links">
-    <a href="#" id="forgotPasswordLink">Forgot password?</a><br>
-    Don't have an account? <a href="register.html">Register</a>
-  </p>
+        <button type="submit" class="auth-submit-btn">Sign In</button>
+      </form>
+    </section>
 
-  <form id="forgotPasswordForm" style="display: none; margin-top: 16px;">
-    <label>Registered Email</label>
-    <input type="email" id="forgotEmail" placeholder="Enter your registered email" required>
+    <aside class="auth-side-panel">
+      <button type="button" class="panel-close" aria-label="Close panel">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
-    <label>New Password</label>
-    <input type="password" id="forgotNewPassword" placeholder="Enter new password" required>
+      <div class="panel-content">
+        <h2>New Here?</h2>
+        <p>Sign up and discover a great amount of new opportunities!</p>
+        <a href="register.html" class="panel-signup-btn">Sign Up</a>
+      </div>
+    </aside>
+  </main>
 
-    <button type="submit">Reset Password</button>
-  </form>
-</div>
-
-<script src="login.js"></script>
+  <script src="darkmode.js"></script>
+  <script src="login.js"></script>
 </body>
+
 </html>

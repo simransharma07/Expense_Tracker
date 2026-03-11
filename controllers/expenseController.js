@@ -1,10 +1,10 @@
-const { getExpenses, saveExpenses } = require('../models/expenseModel');
+const { getExpenses } = require('../models/expenseModel');
 
-// GET - Fetch all expenses (with query parameter support for filtering)
+
 exports.fetchExpenses = (req, res) => {
   const expenses = getExpenses();
   
-  // Demonstrate Query Parameters from syllabus
+
   const { sort, limit } = req.query;
   
   let result = expenses;
@@ -19,7 +19,7 @@ exports.fetchExpenses = (req, res) => {
     result = result.slice(0, parseInt(limit));
   }
   
-  // Using res.json() response method
+ 
   res.status(200).json({
     success: true,
     count: result.length,
@@ -27,10 +27,10 @@ exports.fetchExpenses = (req, res) => {
   });
 };
 
-// GET - Fetch single expense by ID (Route Parameters from syllabus)
+
 exports.fetchExpenseById = (req, res) => {
   const expenses = getExpenses();
-  const { id } = req.params; // Route parameter
+  const { id } = req.params; 
   
   const expense = expenses.find(exp => exp.id === id);
   
@@ -47,93 +47,25 @@ exports.fetchExpenseById = (req, res) => {
   });
 };
 
-// POST - Add new expense
+
 exports.addExpense = (req, res) => {
-  const expenses = getExpenses();
-  const { title, amount, category, date, account } = req.body;
-
-  // Request validation
-  if (!title || !amount) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'Title and Amount required' 
-    });
-  }
-
-  const newExpense = { 
-    id: Date.now().toString(), 
-    title, 
-    amount: parseFloat(amount),
-    category: category || 'General',
-    account: account || 'cash',
-    date: date || new Date().toISOString()
-  };
-  
-  expenses.push(newExpense);
-  saveExpenses(expenses);
-
-  // Using res.status().json() - Response Methods from syllabus
-  res.status(201).json({
-    success: true,
-    message: 'Expense added successfully',
-    data: newExpense
+  res.status(405).json({
+    success: false,
+    message: 'Database is static. Adding expenses is disabled.'
   });
 };
 
-// PUT - Update expense by ID (Route Parameters)
+
 exports.updateExpense = (req, res) => {
-  const expenses = getExpenses();
-  const { id } = req.params; // Route parameter from URL
-  const { title, amount, category, account } = req.body;
-  
-  const expenseIndex = expenses.findIndex(exp => exp.id === id);
-  
-  if (expenseIndex === -1) {
-    return res.status(404).json({ 
-      success: false, 
-      message: 'Expense not found' 
-    });
-  }
-  
-  // Update expense
-  expenses[expenseIndex] = {
-    ...expenses[expenseIndex],
-    title: title || expenses[expenseIndex].title,
-    amount: amount ? parseFloat(amount) : expenses[expenseIndex].amount,
-    category: category || expenses[expenseIndex].category,
-    account: account || expenses[expenseIndex].account,
-    updatedAt: new Date().toISOString()
-  };
-  
-  saveExpenses(expenses);
-  
-  res.status(200).json({
-    success: true,
-    message: 'Expense updated successfully',
-    data: expenses[expenseIndex]
+  res.status(405).json({
+    success: false,
+    message: 'Database is static. Updating expenses is disabled.'
   });
 };
 
-// DELETE - Delete expense by ID (Route Parameters)
 exports.deleteExpense = (req, res) => {
-  const expenses = getExpenses();
-  const { id } = req.params; // Route parameter
-  
-  const expenseIndex = expenses.findIndex(exp => exp.id === id);
-  
-  if (expenseIndex === -1) {
-    return res.status(404).json({ 
-      success: false, 
-      message: 'Expense not found' 
-    });
-  }
-  
-  const deletedExpense = expenses.splice(expenseIndex, 1);
-  saveExpenses(expenses);
-  
-  res.status(200).json({
-    success: true,
-    message: 'Expense deleted successfully',
-    data: deletedExpense[0]
+  res.status(405).json({
+    success: false,
+    message: 'Database is static. Deleting expenses is disabled.'
   });
 };

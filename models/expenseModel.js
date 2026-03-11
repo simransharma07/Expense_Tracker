@@ -16,7 +16,6 @@ const normalizeExpenses = (expenses) => {
   }));
 };
 
-// Synchronous file operations (original methods)
 exports.getExpenses = () => {
   try {
     const expenses = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -28,15 +27,9 @@ exports.getExpenses = () => {
 };
 
 exports.saveExpenses = (expenses) => {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(normalizeExpenses(expenses), null, 2), 'utf8');
-  } catch (error) {
-    console.error('Error saving expenses:', error);
-    throw error;
-  }
+  return normalizeExpenses(expenses);
 };
 
-// ASYNCHRONOUS FILE OPERATIONS (using fs.promises from syllabus)
 exports.getExpensesAsync = async () => {
   try {
     const data = await fs.promises.readFile(filePath, 'utf8');
@@ -48,23 +41,9 @@ exports.getExpensesAsync = async () => {
 };
 
 exports.saveExpensesAsync = async (expenses) => {
-  try {
-    await fs.promises.writeFile(
-      filePath, 
-      JSON.stringify(normalizeExpenses(expenses), null, 2), 
-      'utf8'
-    );
-    return true;
-  } catch (error) {
-    console.error('Error saving expenses async:', error);
-    throw error;
-  }
+  return true;
 };
 
-// FILE MODULE - Append to file
 exports.appendExpenseLog = (expense) => {
-  const logPath = path.join(__dirname, '../data/expense_changes.log');
-  const logEntry = `[${new Date().toISOString()}] Added: ${expense.title} - $${expense.amount}\n`;
-  
-  fs.appendFileSync(logPath, logEntry, 'utf8');
+  return expense;
 };
