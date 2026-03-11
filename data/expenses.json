@@ -6,8 +6,6 @@
     "category": "Food",
     "date": "2026-03-01T00:00:00.000Z",
     "account": "cash"
-<<<<<<< HEAD
-=======
   },
   {
     "id": "1709942400000",
@@ -41,6 +39,6 @@
     "category": "home",
     "account": "card",
     "date": "2026-02-12T00:00:00.000Z"
->>>>>>> 763c6cfa0e2fbf1391dbc624af2a5fa3e907d53f
+
   }
 ]
