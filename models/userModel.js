@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const filePath = path.join(__dirname, '../data/users.json');
 
-// Synchronous file operations
 exports.getUsers = () => {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -13,15 +12,9 @@ exports.getUsers = () => {
 };
 
 exports.saveUsers = (users) => {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(users, null, 2), 'utf8');
-  } catch (error) {
-    console.error('Error saving users:', error);
-    throw error;
-  }
+  return users;
 };
 
-// ASYNCHRONOUS FILE OPERATIONS (from syllabus)
 exports.getUsersAsync = async () => {
   try {
     const data = await fs.promises.readFile(filePath, 'utf8');
@@ -33,15 +26,5 @@ exports.getUsersAsync = async () => {
 };
 
 exports.saveUsersAsync = async (users) => {
-  try {
-    await fs.promises.writeFile(
-      filePath, 
-      JSON.stringify(users, null, 2), 
-      'utf8'
-    );
-    return true;
-  } catch (error) {
-    console.error('Error saving users async:', error);
-    throw error;
-  }
+  return true;
 };

@@ -30,10 +30,10 @@ app.use((req, res, next) => {
 
 // ========== ROUTING (from syllabus) ==========
 
-// Root route
+// Root route - Landing page
 app.get('/', (req, res) => {
   // Using res.sendFile() - Response Method from syllabus
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ROUTER-LEVEL MIDDLEWARE - Mount routers
