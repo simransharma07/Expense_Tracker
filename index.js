@@ -32,31 +32,8 @@ app.get('/', (req, res) => {
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/expenses', require('./routes/expenseRoutes'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
-app.use('/files', require('./routes/fileRoutes')); 
-
-
-app.get('/api/info', (req, res) => {
-  res.send('Expense Tracker API - Version 1.0');
-});
-
-
-app.get('/api/status', (req, res) => {
-  res.json({
-    status: 'running',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString()
-  });
-});
-
-app.get('/api/download-sample', (req, res) => {
-  const samplePath = path.join(__dirname, 'data', 'expenses.json');
-  res.sendFile(samplePath);
-});
-app.get('/api/test-error', (req, res, next) => {
-  const error = new Error('This is a test error');
-  error.statusCode = 400;
-  next(error);
-});
+app.use('/files', require('./routes/fileRoutes'));
+app.use('/api', require('./routes/apiRoutes'));
 app.use(notFoundHandler);
 
 app.use(errorHandler);
