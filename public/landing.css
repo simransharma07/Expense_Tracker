@@ -1,4 +1,4 @@
-/* ===== LANDING PAGE STYLES ===== */
+
 
 * {
   margin: 0;
@@ -13,7 +13,6 @@ body {
   overflow-x: hidden;
 }
 
-/* --- Navbar --- */
 .landing-nav {
   position: fixed;
   top: 0;

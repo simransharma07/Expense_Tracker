@@ -1,7 +1,4 @@
-/* ===== DARK MODE for Auth Pages & Dashboard ===== */
-/* Auth pages and dashboard default to light; these overrides apply when dark-mode is active */
 
-/* --- Shared toggle button style --- */
 .dark-mode-toggle {
   background: none;
   border: none;
@@ -17,7 +14,6 @@
   color: #333333;
 }
 
-/* ===== AUTH PAGES (login / register) DARK MODE ===== */
 body.dark-mode.login-page,
 body.dark-mode.register-page {
   background: #0e0e0e;
@@ -96,8 +92,6 @@ body.dark-mode .dark-mode-toggle {
 body.dark-mode .dark-mode-toggle:hover {
   color: #ffffff;
 }
-
-/* ===== DASHBOARD DARK MODE ===== */
 body.dark-mode.dashboard-page {
   background: #0e0e0e;
 }
