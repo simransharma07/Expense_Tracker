@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Expense Tracker</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f6fa; }
+    .app-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .nav-brand a { color: white; text-decoration: none; font-size: 1.5rem; font-weight: bold; }
+    .nav-links { display: flex; list-style: none; gap: 1.5rem; }
+    .nav-links a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 5px; transition: background 0.3s; }
+    .nav-links a:hover { background: rgba(255,255,255,0.2); }
+    .btn-logout { background: rgba(255,255,255,0.2); }
+    .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+    .profile-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .profile-header { text-align: center; margin-bottom: 2rem; }
+    .avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2.5rem; font-weight: bold; }
+    .profile-info { margin-bottom: 2rem; }
+    .info-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #eee; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #666; }
+    .info-value { color: #333; font-weight: 500; }
+    .edit-form .form-group { margin-bottom: 1rem; }
+    .edit-form label { display: block; margin-bottom: 0.5rem; color: #555; }
+    .edit-form input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+    .btn-primary:hover { opacity: 0.9; }
+    .app-footer { text-align: center; padding: 2rem; color: #666; margin-top: 2rem; }
+    .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="container">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+        <h2><%= user.name %></h2>
+        <p><%= user.email %></p>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-row">
+          <span class="info-label">Member Since</span>
+          <span class="info-value"><%= new Date(user.createdAt).toLocaleDateString() %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Account Type</span>
+          <span class="info-value"><%= user.role %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Updated</span>
+          <span class="info-value"><%= new Date(user.updatedAt).toLocaleDateString() %></span>
+        </div>
+      </div>
+
+      <h3>Edit Profile</h3>
+      <div id="alertContainer"></div>
+      <form class="edit-form" id="profileForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" value="<%= user.name %>" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<%= user.email %>" disabled>
+        </div>
+        <button type="submit" class="btn-primary">Update Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script>
+    const token = '<%= token %>';
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const alertContainer = document.getElementById('alertContainer');
+
+      try {
+        const res = await fetch('/auth/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ name })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          alertContainer.innerHTML = '<div class="alert alert-success">Profile updated successfully!</div>';
+          setTimeout(() => alertContainer.innerHTML = '', 3000);
+        } else {
+          alertContainer.innerHTML = '<div class="alert alert-error">' + (result.message || 'Failed to update profile') + '</div>';
+        }
+      } catch (err) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Failed to update profile</div>';
+      }
+    });
+  </script>
+</body>
+</html>

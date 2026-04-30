@@ -1,40 +1,34 @@
-
+const notFoundHandler = (req, res, next) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+};
 
 const errorHandler = (err, req, res, next) => {
-  console.error('Error occurred:', err.message);
-  console.error('Stack trace:', err.stack);
-  
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
 
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    statusCode = 404;
+    message = 'Resource not found';
+  }
+
+  if (err.name === 'ValidationError') {
+    statusCode = 400;
+    message = Object.values(err.errors).map(e => e.message).join(', ');
+  }
+
+  if (err.code === 11000) {
+    statusCode = 400;
+    const field = Object.keys(err.keyValue)[0];
+    message = `Duplicate value for field: ${field}`;
+  }
+
   res.status(statusCode).json({
     success: false,
-    error: message,
+    message: message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
   });
 };
 
-
-const notFoundHandler = (req, res, next) => {
-  const error = new Error(`Route not found - ${req.originalUrl}`);
-  error.statusCode = 404;
-  next(error); 
-};
-
-
-class AppError extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-    this.isOperational = true;
-    
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
-module.exports = {
-  errorHandler,
-  notFoundHandler,
-  AppError
-};
+module.exports = { notFoundHandler, errorHandler };

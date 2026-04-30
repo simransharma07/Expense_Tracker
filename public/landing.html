@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker - Home</title>
+  <link rel="stylesheet" href="/landing.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">Expense Tracker</div>
+    <ul class="nav-links">
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    </ul>
+  </nav>
+
+  <main class="hero">
+    <h1>Track Your Expenses Smartly</h1>
+    <p>A modern expense tracking application with real-time updates</p>
+    <div class="cta-buttons">
+      <a href="/register" class="btn btn-primary">Get Started</a>
+      <a href="/login" class="btn btn-secondary">Sign In</a>
+    </div>
+  </main>
+
+  <section class="features">
+    <h2>Features</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🔐 Secure Authentication</h3>
+        <p>JWT-based authentication with bcrypt password hashing</p>
+      </div>
+      <div class="feature-card">
+        <h3>📊 Real-time Updates</h3>
+        <p>Live expense updates using Socket.IO</p>
+      </div>
+      <div class="feature-card">
+        <h3>💾 Dual Database</h3>
+        <p>MongoDB for primary data, PostgreSQL for logs</p>
+      </div>
+      <div class="feature-card">
+        <h3>📱 Responsive Design</h3>
+        <p>Works seamlessly on all devices</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2026 Expense Tracker. Built with Express, MongoDB & Socket.IO</p>
+  </footer>
+</body>
+</html>
